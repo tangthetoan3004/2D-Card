@@ -7,6 +7,7 @@
 #include <QRegularExpression>
 #include "Viewport.h"
 #include "../command/DeleteShapeCommand.h"
+#include "../state/TransformState.h"
 
 
 Viewport::Viewport(QWidget* parent) : QWidget(parent)
@@ -31,6 +32,10 @@ Viewport::Viewport(QWidget* parent) : QWidget(parent)
 	mMachine->AddState(new SelectFaceState("SELECT_FACE", mData));
 	mMachine->AddState(new DrawLineState("DRAW_LINE", mData));
 	mMachine->AddState(new DrawFaceState("DRAW_FACE", mData));
+	mMachine->AddState(new TransformState("TRANSFORM_MOVE", mData, TransformMode::MOVE));
+	mMachine->AddState(new TransformState("TRANSFORM_COPY", mData, TransformMode::COPY));
+	mMachine->AddState(new TransformState("TRANSFORM_ROTATE", mData, TransformMode::ROTATE));
+	mMachine->AddState(new TransformState("TRANSFORM_SCALE", mData, TransformMode::SCALE));
 	mMachine->SetState("SELECT_POINT");
 }
 
@@ -55,6 +60,30 @@ void Viewport::UpdateState(const std::string& name)
 		mMachine->DeleteState(name);
 		delete dynamic_cast<DrawFaceState*>(mMachine->GetState(name));
 		mMachine->AddState(new DrawFaceState("DRAW_FACE", mData));
+	}
+	else if (!name.compare("TRANSFORM_MOVE"))
+	{
+		mMachine->DeleteState(name);
+		delete dynamic_cast<TransformState*>(mMachine->GetState(name));
+		mMachine->AddState(new TransformState("TRANSFORM_MOVE", mData, TransformMode::MOVE));
+	}
+	else if (!name.compare("TRANSFORM_COPY"))
+	{
+		mMachine->DeleteState(name);
+		delete dynamic_cast<TransformState*>(mMachine->GetState(name));
+		mMachine->AddState(new TransformState("TRANSFORM_COPY", mData, TransformMode::COPY));
+	}
+	else if (!name.compare("TRANSFORM_ROTATE"))
+	{
+		mMachine->DeleteState(name);
+		delete dynamic_cast<TransformState*>(mMachine->GetState(name));
+		mMachine->AddState(new TransformState("TRANSFORM_ROTATE", mData, TransformMode::ROTATE));
+	}
+	else if (!name.compare("TRANSFORM_SCALE"))
+	{
+		mMachine->DeleteState(name);
+		delete dynamic_cast<TransformState*>(mMachine->GetState(name));
+		mMachine->AddState(new TransformState("TRANSFORM_SCALE", mData, TransformMode::SCALE));
 	}
 
 	mMachine->Transition(name, mData);
@@ -332,6 +361,15 @@ void Viewport::keyPressEvent(QKeyEvent* event)
 	{
 	case Qt::Key_Delete:
 		DeleteSelectedShapes();
+		break;
+	case Qt::Key_M:
+		UpdateState("TRANSFORM_MOVE");
+		break;
+	case Qt::Key_C:
+		UpdateState("TRANSFORM_COPY");
+		break;
+	case Qt::Key_R:
+		UpdateState("TRANSFORM_ROTATE");
 		break;
 	case Qt::Key_E: // Zoom In
 		mCamera->Zoom(scale);

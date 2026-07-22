@@ -109,6 +109,11 @@
     <ClCompile Include="command\DrawLineCommand.cpp" />
     <ClCompile Include="command\DrawFaceCommand.cpp" />
     <ClCompile Include="command\DeleteShapeCommand.cpp" />
+    <ClCompile Include="command\MoveCommand.cpp" />
+    <ClCompile Include="command\CopyCommand.cpp" />
+    <ClCompile Include="command\RotateCommand.cpp" />
+    <ClCompile Include="command\ScaleCommand.cpp" />
+    <ClCompile Include="state\TransformState.cpp" />
     <ClCompile Include="viewport\Viewport.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="main.cpp" />
@@ -122,6 +127,11 @@
     <ClInclude Include="command\DrawLineCommand.h" />
     <ClInclude Include="command\DrawFaceCommand.h" />
     <ClInclude Include="command\DeleteShapeCommand.h" />
+    <ClInclude Include="command\MoveCommand.h" />
+    <ClInclude Include="command\CopyCommand.h" />
+    <ClInclude Include="command\RotateCommand.h" />
+    <ClInclude Include="command\ScaleCommand.h" />
+    <ClInclude Include="state\TransformState.h" />
     <ClInclude Include="viewport\Camera.h" />
     <ClInclude Include="viewport\Viewport.h" />
     <ClInclude Include="viewport\Scene.h" />

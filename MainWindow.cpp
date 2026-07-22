@@ -94,6 +94,12 @@ void MainWindow::SetToolbar()
 	redoBtn->setShortcut(QKeySequence::Redo);
 	toolbar->addSeparator();
 
+	QAction* moveBtn = toolbar->addAction("Move (M)");
+	QAction* copyBtn = toolbar->addAction("Copy (C)");
+	QAction* rotateBtn = toolbar->addAction("Rotate (R)");
+	QAction* scaleBtn = toolbar->addAction("Scale");
+	toolbar->addSeparator();
+
 	QAction* quit = toolbar->addAction(QIcon(QPixmap("img/quit.png")), "Quit Application");
 
 	connect(quit, &QAction::triggered, qApp, &QApplication::quit);
@@ -116,6 +122,22 @@ void MainWindow::SetToolbar()
 	connect(redoBtn, &QAction::triggered, [this]()
 		{
 			mViewport->Redo();
+		});
+	connect(moveBtn, &QAction::triggered, [this]()
+		{
+			mViewport->UpdateState("TRANSFORM_MOVE");
+		});
+	connect(copyBtn, &QAction::triggered, [this]()
+		{
+			mViewport->UpdateState("TRANSFORM_COPY");
+		});
+	connect(rotateBtn, &QAction::triggered, [this]()
+		{
+			mViewport->UpdateState("TRANSFORM_ROTATE");
+		});
+	connect(scaleBtn, &QAction::triggered, [this]()
+		{
+			mViewport->UpdateState("TRANSFORM_SCALE");
 		});
 }
 

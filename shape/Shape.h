@@ -21,6 +21,9 @@ public:
 
 	QPointF GetVertex();
 	void UpdateVertex(const QPointF& p);
+	void Move(float dx, float dy);
+	void Rotate(const QPointF& pivot, float angleRad);
+	void Scale(const QPointF& pivot, float scaleFactor);
 
 	virtual std::string Type() override;
 	virtual bool CheckShapeType(const std::string& s) override;
@@ -38,6 +41,7 @@ public:
 	Line(std::list<Vertex*> vertices);
 
 	std::vector<Vertex> GetVertices();
+	std::vector<Vertex*> GetVertexPtrs() { return { mV1, mV2 }; }
 	QLineF GetLine(Camera* cam);
 	void UpdateLine(Camera* cam, const QPointF& pStart, const QPointF& pEnd, std::vector<Vertex>& vertices);
 	QJsonObject SaveLine();
@@ -59,6 +63,7 @@ public:
 	Face(Vertex* v);
 
 	std::vector<Vertex> GetVertices();
+	std::vector<Vertex*> GetVertexPtrs() { return std::vector<Vertex*>(mVertices.begin(), mVertices.end()); }
 	QPolygonF GetFace(Camera* cam);
 	void UpdateFace(Camera* cam, const QPointF& pStart, const QPointF& pEnd, std::list<Shape*> shapes, std::vector<Vertex>& vertices);
 	QJsonObject SaveFace();
