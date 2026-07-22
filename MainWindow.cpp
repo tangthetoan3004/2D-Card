@@ -52,8 +52,12 @@ void MainWindow::SetMenubar()
 
 	/* Edit */
 	QMenu* edit = menuBar()->addMenu("&Edit");
-	edit->addAction(newa);
-	edit->addAction(open);
+	mUndoAction = edit->addAction("&Undo");
+	mUndoAction->setShortcut(QKeySequence::Undo);
+	mRedoAction = edit->addAction("&Redo");
+	mRedoAction->setShortcut(QKeySequence::Redo);
+	connect(mUndoAction, &QAction::triggered, [this]() { mViewport->Undo(); });
+	connect(mRedoAction, &QAction::triggered, [this]() { mViewport->Redo(); });
 
 
 	/* View */
@@ -84,6 +88,12 @@ void MainWindow::SetToolbar()
 	QAction* save = toolbar->addAction(QIcon(QPixmap("img/save.png")), "Save File");
 	toolbar->addSeparator();
 
+	QAction* undoBtn = toolbar->addAction("Undo");
+	undoBtn->setShortcut(QKeySequence::Undo);
+	QAction* redoBtn = toolbar->addAction("Redo");
+	redoBtn->setShortcut(QKeySequence::Redo);
+	toolbar->addSeparator();
+
 	QAction* quit = toolbar->addAction(QIcon(QPixmap("img/quit.png")), "Quit Application");
 
 	connect(quit, &QAction::triggered, qApp, &QApplication::quit);
@@ -98,6 +108,14 @@ void MainWindow::SetToolbar()
 	connect(save, &QAction::triggered, qApp, [this]()
 		{
 			mViewport->SaveScene();
+		});
+	connect(undoBtn, &QAction::triggered, [this]()
+		{
+			mViewport->Undo();
+		});
+	connect(redoBtn, &QAction::triggered, [this]()
+		{
+			mViewport->Redo();
 		});
 }
 

@@ -1,5 +1,6 @@
 #include "State.h"
 #include "../viewport/Viewport.h"
+#include "../command/DrawFaceCommand.h"
 
 DrawFaceState::DrawFaceState(const std::string& name, SelectUtils::ViewportData* data)
 	: State(name, data)
@@ -64,16 +65,18 @@ void DrawFaceState::mouseReleaseEvent(QMouseEvent* event)
 			if (mPoints.size() != 3)
 			{
 				std::list<Vertex*> vertices;
+				std::vector<Vertex*> vecVertices;
 
 				// Add vertices to Scene and polygon without last vertex
 				for (int i = 0; i < mPoints.size() - 1; i++)
 				{
 					Vertex* v = new Vertex(mCamera->SetWindowCoordinate(mPoints[i].toPoint()));
 					vertices.push_back(v);
-					mScene->AddShape(v);
+					vecVertices.push_back(v);
 				}
 
-				mScene->AddShape(new Face(vertices));
+				Face* face = new Face(vertices);
+				mViewport->PushCommand(std::make_unique<DrawFaceCommand>(mScene, face, vecVertices));
 			}
 
 			mPoints = {};

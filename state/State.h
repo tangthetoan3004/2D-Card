@@ -21,6 +21,7 @@ public:
 	virtual void mouseMoveEvent(QMouseEvent* event) = 0;
 	virtual void mouseReleaseEvent(QMouseEvent* event) = 0;
 	virtual void paintEvent(QPainter* painter) = 0;
+	virtual Shape* GetSelectedShape() { return nullptr; }
 
 private:
 	std::string mName;
@@ -91,6 +92,7 @@ public:
 	virtual void mouseMoveEvent(QMouseEvent* event) override;
 	virtual void mouseReleaseEvent(QMouseEvent* event) override;
 	virtual void paintEvent(QPainter* painter) override;
+	virtual Shape* GetSelectedShape() override { return mHit ? dynamic_cast<Shape*>(mVertex) : nullptr; }
 
 private:
 	std::string mName;
@@ -124,6 +126,7 @@ public:
 	virtual void mouseMoveEvent(QMouseEvent* event) override;
 	virtual void mouseReleaseEvent(QMouseEvent* event) override;
 	virtual void paintEvent(QPainter* painter) override;
+	virtual Shape* GetSelectedShape() override { return mHit ? dynamic_cast<Shape*>(mLine) : nullptr; }
 
 private:
 	std::string mName;
@@ -153,6 +156,7 @@ public:
 	virtual void mouseMoveEvent(QMouseEvent* event) override;
 	virtual void mouseReleaseEvent(QMouseEvent* event) override;
 	virtual void paintEvent(QPainter* painter) override;
+	virtual Shape* GetSelectedShape() override { return mHit ? dynamic_cast<Shape*>(mFace) : nullptr; }
 
 private:
 	std::string mName;

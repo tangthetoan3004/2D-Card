@@ -5,6 +5,7 @@
 #include "Scene.h"
 #include "Camera.h"
 #include "../state/StateMachine.h"
+#include "../command/CommandHistory.h"
 
 class Viewport : public QWidget
 {
@@ -17,6 +18,14 @@ public:
 	void SaveScene();
 	void LoadScene();
 	void CreateNewScene();
+
+	// Command History & Edit operations
+	void PushCommand(std::unique_ptr<Command> cmd);
+	void Undo();
+	void Redo();
+	bool CanUndo() const;
+	bool CanRedo() const;
+	void DeleteSelectedShapes();
 
 private:
 	void paintEvent(QPaintEvent* event) override;
@@ -35,4 +44,5 @@ private:
 	Scene* mScene;
 	Camera* mCamera;
 	StateMachine* mMachine;
+	CommandHistory* mHistory;
 };

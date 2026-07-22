@@ -32,4 +32,6 @@ private:
 	Viewport* mViewport;
 	QWidget* mSidebar;
 	QWidget* mUnderbar;
+	QAction* mUndoAction;
+	QAction* mRedoAction;
 };

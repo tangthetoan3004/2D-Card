@@ -6,6 +6,7 @@
 #include <QJsonDocument>
 #include <QRegularExpression>
 #include "Viewport.h"
+#include "../command/DeleteShapeCommand.h"
 
 
 Viewport::Viewport(QWidget* parent) : QWidget(parent)
@@ -20,6 +21,7 @@ Viewport::Viewport(QWidget* parent) : QWidget(parent)
 	mCamera = new Camera(parent->size(), 80.0);
 	mScene = new Scene(mCamera);
 	mScene->CreateSampleShapes();
+	mHistory = new CommandHistory();
 
 	// Define States
 	mData = new SelectUtils::ViewportData{ this, mScene, mCamera };
@@ -34,6 +36,7 @@ Viewport::Viewport(QWidget* parent) : QWidget(parent)
 
 Viewport::~Viewport()
 {
+	delete mHistory;
 	delete mScene;
 	delete mCamera;
 }
@@ -207,7 +210,55 @@ void Viewport::CreateNewScene()
 	mData->scene = mScene;
 	mMachine->CurrentState()->UpdateScene(mScene);
 	mCamera->Reset(size());
+	if (mHistory) mHistory->Clear();
 	update();
+}
+
+void Viewport::PushCommand(std::unique_ptr<Command> cmd)
+{
+	if (mHistory)
+	{
+		mHistory->PushCommand(std::move(cmd));
+		update();
+	}
+}
+
+void Viewport::Undo()
+{
+	if (mHistory && mHistory->Undo())
+	{
+		update();
+	}
+}
+
+void Viewport::Redo()
+{
+	if (mHistory && mHistory->Redo())
+	{
+		update();
+	}
+}
+
+bool Viewport::CanUndo() const
+{
+	return mHistory ? mHistory->CanUndo() : false;
+}
+
+bool Viewport::CanRedo() const
+{
+	return mHistory ? mHistory->CanRedo() : false;
+}
+
+void Viewport::DeleteSelectedShapes()
+{
+	if (!mMachine || !mMachine->CurrentState()) return;
+
+	Shape* selected = mMachine->CurrentState()->GetSelectedShape();
+	if (selected)
+	{
+		std::vector<Shape*> targets = { selected };
+		PushCommand(std::make_unique<DeleteShapeCommand>(mScene, targets));
+	}
 }
 
 void Viewport::paintEvent(QPaintEvent* event)
@@ -263,8 +314,25 @@ void Viewport::keyPressEvent(QKeyEvent* event)
 	float interval = 1.0;
 	float scale = 60.0;
 
+	if (event->modifiers() & Qt::ControlModifier)
+	{
+		if (event->key() == Qt::Key_Z)
+		{
+			Undo();
+			return;
+		}
+		else if (event->key() == Qt::Key_Y)
+		{
+			Redo();
+			return;
+		}
+	}
+
 	switch (event->key())
 	{
+	case Qt::Key_Delete:
+		DeleteSelectedShapes();
+		break;
 	case Qt::Key_E: // Zoom In
 		mCamera->Zoom(scale);
 		break;

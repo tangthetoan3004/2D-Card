@@ -1,5 +1,6 @@
 #include "State.h"
 #include "../viewport/Viewport.h"
+#include "../command/DrawLineCommand.h"
 
 DrawLineState::DrawLineState(const std::string& name, SelectUtils::ViewportData* data)
 	: State(name, data)
@@ -40,9 +41,7 @@ void DrawLineState::mouseReleaseEvent(QMouseEvent* event)
 			Vertex* v1 = new Vertex(mCamera->SetWindowCoordinate(mPoints.front().toPoint()));
 			Vertex* v2 = new Vertex(mCamera->SetWindowCoordinate(mPos.toPoint()));
 			Line* line = new Line(v1, v2);
-			mScene->AddShape(v1);
-			mScene->AddShape(v2);
-			mScene->AddShape(line);
+			mViewport->PushCommand(std::make_unique<DrawLineCommand>(mScene, line, std::vector<Vertex*>{ v1, v2 }));
 
 			// Initialization
 			mPoints = {};
