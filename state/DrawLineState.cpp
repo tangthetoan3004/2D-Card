@@ -33,13 +33,23 @@ void DrawLineState::mouseReleaseEvent(QMouseEvent* event)
 {
 	if (mButton == Qt::LeftButton)
 	{
-		mPoints.push_back(mPos);
+		QPointF currentPos = mPos;
+		if (mViewport->IsOsnapEnabled())
+		{
+			SelectUtils::SnapResult snap = SelectUtils::FindBestSnapPoint(mPos, mScene, mCamera);
+			if (snap.type != SelectUtils::SnapType::NONE)
+			{
+				currentPos = mCamera->SetScreenCoordinate(snap.snapWorldPoint);
+			}
+		}
+
+		mPoints.push_back(currentPos);
 		mDrawLine = true;
 
 		if (mPoints.size() == 2)
 		{
 			Vertex* v1 = new Vertex(mCamera->SetWindowCoordinate(mPoints.front().toPoint()));
-			Vertex* v2 = new Vertex(mCamera->SetWindowCoordinate(mPos.toPoint()));
+			Vertex* v2 = new Vertex(mCamera->SetWindowCoordinate(mPoints.back().toPoint()));
 			Line* line = new Line(v1, v2);
 			mViewport->PushCommand(std::make_unique<DrawLineCommand>(mScene, line, std::vector<Vertex*>{ v1, v2 }));
 
@@ -55,24 +65,38 @@ void DrawLineState::mouseReleaseEvent(QMouseEvent* event)
 
 void DrawLineState::paintEvent(QPainter* painter)
 {
+	SelectUtils::SnapResult snap;
+	if (mViewport->IsOsnapEnabled())
+	{
+		snap = SelectUtils::FindBestSnapPoint(mPos, mScene, mCamera);
+	}
+
 	if (mDrawLine && mPoints.size() != 2)
 	{
+		QPointF targetPos = (snap.type != SelectUtils::SnapType::NONE) ? mCamera->SetScreenCoordinate(snap.snapWorldPoint) : mPos;
+
 		// Draw line first
 		painter->setPen(QPen(Qt::darkGray, 3));
-		painter->drawLine(mPoints.at(0), mPos);
+		painter->drawLine(mPoints.at(0), targetPos);
 
 		// Draw points on line
 		painter->setPen(QPen(Qt::blue, 10, Qt::SolidLine, Qt::RoundCap));
 		painter->drawPoint(mPoints.at(0));
-		painter->drawPoint(mPos);
+		painter->drawPoint(targetPos);
+	}
+
+	if (snap.type != SelectUtils::SnapType::NONE)
+	{
+		SelectUtils::DrawSnapMarker(painter, mCamera, snap);
 	}
 
 	painter->setPen(QPen(Qt::black));
+	QPointF labelWorldPos = (snap.type != SelectUtils::SnapType::NONE) ? snap.snapWorldPoint : mCamera->SetWindowCoordinate(mPos.toPoint());
 	painter->drawText(
 		mPos.x() + 15,
 		mPos.y() - 15,
 		QString("x: %1, y: %2")
-		.arg(mCamera->SetWindowCoordinate(mPos.toPoint()).x(), 0, 'f', 2)
-		.arg(mCamera->SetWindowCoordinate(mPos.toPoint()).y(), 0, 'f', 2)
+		.arg(labelWorldPos.x(), 0, 'f', 2)
+		.arg(labelWorldPos.y(), 0, 'f', 2)
 	);
 }

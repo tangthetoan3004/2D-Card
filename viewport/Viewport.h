@@ -27,6 +27,10 @@ public:
 	bool CanRedo() const;
 	void DeleteSelectedShapes();
 
+	// OSNAP Operations
+	void ToggleOsnap();
+	bool IsOsnapEnabled() const;
+
 private:
 	void paintEvent(QPaintEvent* event) override;
 	void mousePressEvent(QMouseEvent* event) override;
@@ -38,6 +42,7 @@ private:
 
 	int mButton;
 	QPointF mPos;
+	bool mOsnapEnabled;
 
 	// Viewport data
 	SelectUtils::ViewportData* mData;

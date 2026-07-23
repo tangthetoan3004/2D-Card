@@ -23,6 +23,7 @@ Viewport::Viewport(QWidget* parent) : QWidget(parent)
 	mScene = new Scene(mCamera);
 	mScene->CreateSampleShapes();
 	mHistory = new CommandHistory();
+	mOsnapEnabled = true;
 
 	// Define States
 	mData = new SelectUtils::ViewportData{ this, mScene, mCamera };
@@ -290,6 +291,17 @@ void Viewport::DeleteSelectedShapes()
 	}
 }
 
+void Viewport::ToggleOsnap()
+{
+	mOsnapEnabled = !mOsnapEnabled;
+	update();
+}
+
+bool Viewport::IsOsnapEnabled() const
+{
+	return mOsnapEnabled;
+}
+
 void Viewport::paintEvent(QPaintEvent* event)
 {
 	QPainter* painter = new QPainter(this);
@@ -359,6 +371,9 @@ void Viewport::keyPressEvent(QKeyEvent* event)
 
 	switch (event->key())
 	{
+	case Qt::Key_F3:
+		ToggleOsnap();
+		break;
 	case Qt::Key_Delete:
 		DeleteSelectedShapes();
 		break;

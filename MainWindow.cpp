@@ -100,6 +100,11 @@ void MainWindow::SetToolbar()
 	QAction* scaleBtn = toolbar->addAction("Scale");
 	toolbar->addSeparator();
 
+	QAction* osnapBtn = toolbar->addAction("OSNAP (F3)");
+	osnapBtn->setCheckable(true);
+	osnapBtn->setChecked(true);
+	toolbar->addSeparator();
+
 	QAction* quit = toolbar->addAction(QIcon(QPixmap("img/quit.png")), "Quit Application");
 
 	connect(quit, &QAction::triggered, qApp, &QApplication::quit);
@@ -138,6 +143,11 @@ void MainWindow::SetToolbar()
 	connect(scaleBtn, &QAction::triggered, [this]()
 		{
 			mViewport->UpdateState("TRANSFORM_SCALE");
+		});
+	connect(osnapBtn, &QAction::triggered, [this, osnapBtn]()
+		{
+			mViewport->ToggleOsnap();
+			osnapBtn->setChecked(mViewport->IsOsnapEnabled());
 		});
 }
 

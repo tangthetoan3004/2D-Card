@@ -56,7 +56,17 @@ void DrawFaceState::mouseReleaseEvent(QMouseEvent* event)
 {
 	if (mButton == Qt::LeftButton)
 	{
-		mPoints.push_back(mPos);
+		QPointF currentPos = mPos;
+		if (mViewport->IsOsnapEnabled() && !mHit)
+		{
+			SelectUtils::SnapResult snap = SelectUtils::FindBestSnapPoint(mPos, mScene, mCamera);
+			if (snap.type != SelectUtils::SnapType::NONE)
+			{
+				currentPos = mCamera->SetScreenCoordinate(snap.snapWorldPoint);
+			}
+		}
+
+		mPoints.push_back(currentPos);
 		mDrawPolygon = true;
 
 		// Draw finish and Initialization
@@ -141,12 +151,23 @@ void DrawFaceState::paintEvent(QPainter* painter)
 		}
 	}
 
+	SelectUtils::SnapResult snap;
+	if (mViewport->IsOsnapEnabled())
+	{
+		snap = SelectUtils::FindBestSnapPoint(mPos, mScene, mCamera);
+		if (snap.type != SelectUtils::SnapType::NONE)
+		{
+			SelectUtils::DrawSnapMarker(painter, mCamera, snap);
+		}
+	}
+
 	painter->setPen(QPen(Qt::black));
+	QPointF labelWorldPos = (snap.type != SelectUtils::SnapType::NONE) ? snap.snapWorldPoint : mCamera->SetWindowCoordinate(mPos.toPoint());
 	painter->drawText(
 		mPos.x() + 15,
 		mPos.y() - 15,
 		QString("x: %1, y: %2")
-		.arg(mCamera->SetWindowCoordinate(mPos.toPoint()).x(), 0, 'f', 2)
-		.arg(mCamera->SetWindowCoordinate(mPos.toPoint()).y(), 0, 'f', 2)
+		.arg(labelWorldPos.x(), 0, 'f', 2)
+		.arg(labelWorldPos.y(), 0, 'f', 2)
 	);
 }

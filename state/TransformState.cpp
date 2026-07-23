@@ -42,6 +42,14 @@ void TransformState::mouseReleaseEvent(QMouseEvent* event)
     if (mButton == Qt::LeftButton)
     {
         QPointF currentWorldPos = mCamera->SetWindowCoordinate(mPos.toPoint());
+        if (mViewport->IsOsnapEnabled())
+        {
+            SelectUtils::SnapResult snap = SelectUtils::FindBestSnapPoint(mPos, mScene, mCamera);
+            if (snap.type != SelectUtils::SnapType::NONE)
+            {
+                currentWorldPos = snap.snapWorldPoint;
+            }
+        }
 
         if (!mHasBasePoint)
         {
@@ -145,15 +153,27 @@ void TransformState::mouseReleaseEvent(QMouseEvent* event)
 
 void TransformState::paintEvent(QPainter* painter)
 {
+    SelectUtils::SnapResult snap;
+    if (mViewport->IsOsnapEnabled())
+    {
+        snap = SelectUtils::FindBestSnapPoint(mPos, mScene, mCamera);
+    }
+
+    QPoint targetScreenPos = (snap.type != SelectUtils::SnapType::NONE) ? mCamera->SetScreenCoordinate(snap.snapWorldPoint) : mPos.toPoint();
+
     if (mHasBasePoint)
     {
         QPoint baseScreen = mCamera->SetScreenCoordinate(mBasePoint);
-        painter->setPen(QPen(Qt::dashLine));
         painter->setPen(QPen(Qt::darkCyan, 2, Qt::DashLine));
-        painter->drawLine(baseScreen, mPos.toPoint());
+        painter->drawLine(baseScreen, targetScreenPos);
 
         painter->setPen(QPen(Qt::red, 8, Qt::SolidLine, Qt::RoundCap));
         painter->drawPoint(baseScreen);
+    }
+
+    if (snap.type != SelectUtils::SnapType::NONE)
+    {
+        SelectUtils::DrawSnapMarker(painter, mCamera, snap);
     }
 
     painter->setPen(QPen(Qt::black));
@@ -162,12 +182,14 @@ void TransformState::paintEvent(QPainter* painter)
     else if (mMode == TransformMode::ROTATE) modeStr = "ROTATE";
     else if (mMode == TransformMode::SCALE) modeStr = "SCALE";
 
+    QPointF displayWorldPos = (snap.type != SelectUtils::SnapType::NONE) ? snap.snapWorldPoint : mCamera->SetWindowCoordinate(mPos.toPoint());
+
     painter->drawText(
         mPos.x() + 15,
         mPos.y() - 15,
         QString("[%1] x: %2, y: %3")
         .arg(modeStr.c_str())
-        .arg(mCamera->SetWindowCoordinate(mPos.toPoint()).x(), 0, 'f', 2)
-        .arg(mCamera->SetWindowCoordinate(mPos.toPoint()).y(), 0, 'f', 2)
+        .arg(displayWorldPos.x(), 0, 'f', 2)
+        .arg(displayWorldPos.y(), 0, 'f', 2)
     );
 }
