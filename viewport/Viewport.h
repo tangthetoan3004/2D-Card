@@ -18,6 +18,7 @@ public:
 	void SaveScene();
 	void LoadScene();
 	void CreateNewScene();
+	Scene* GetScene() const { return mScene; }
 
 	// Command History & Edit operations
 	void PushCommand(std::unique_ptr<Command> cmd);

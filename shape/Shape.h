@@ -7,10 +7,17 @@
 class Shape
 {
 public:
+	Shape() : mLayerName("0") {}
 	virtual ~Shape() {}
 	virtual std::string Type() = 0;
 	virtual bool CheckShapeType(const std::string& s) = 0;
 	virtual void Render(QPainter* painter, Camera* camera) = 0;
+
+	void SetLayerName(const std::string& name) { mLayerName = name; }
+	std::string GetLayerName() const { return mLayerName; }
+
+protected:
+	std::string mLayerName;
 };
 
 class Vertex : public Shape

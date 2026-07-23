@@ -74,18 +74,19 @@ void DrawFaceState::mouseReleaseEvent(QMouseEvent* event)
 		{
 			if (mPoints.size() != 3)
 			{
-				std::list<Vertex*> vertices;
-				std::vector<Vertex*> vecVertices;
+				std::string activeLayer = mScene->GetLayerManager() ? mScene->GetLayerManager()->GetActiveLayerName() : "0";
 
 				// Add vertices to Scene and polygon without last vertex
 				for (int i = 0; i < mPoints.size() - 1; i++)
 				{
 					Vertex* v = new Vertex(mCamera->SetWindowCoordinate(mPoints[i].toPoint()));
+					v->SetLayerName(activeLayer);
 					vertices.push_back(v);
 					vecVertices.push_back(v);
 				}
 
 				Face* face = new Face(vertices);
+				face->SetLayerName(activeLayer);
 				mViewport->PushCommand(std::make_unique<DrawFaceCommand>(mScene, face, vecVertices));
 			}
 

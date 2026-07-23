@@ -286,6 +286,15 @@ void Viewport::DeleteSelectedShapes()
 	Shape* selected = mMachine->CurrentState()->GetSelectedShape();
 	if (selected)
 	{
+		if (mScene && mScene->GetLayerManager())
+		{
+			auto layer = mScene->GetLayerManager()->GetLayer(selected->GetLayerName());
+			if (layer && layer->isLocked)
+			{
+				return; // Cannot delete shape on locked layer
+			}
+		}
+
 		std::vector<Shape*> targets = { selected };
 		PushCommand(std::make_unique<DeleteShapeCommand>(mScene, targets));
 	}

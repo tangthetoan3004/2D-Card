@@ -5,10 +5,12 @@ constexpr int SCREEN_LIMIT = 15;
 Scene::Scene(Camera* camera)
 {
 	mCamera = camera;
+	mLayerManager = new LayerManager();
 }
 
 Scene::~Scene()
 {
+	delete mLayerManager;
 	for (std::list<Shape*>::iterator iter; iter != mShapes.end(); iter++)
 	{
 		delete (*iter);
@@ -103,6 +105,15 @@ void Scene::RenderShape(QPainter* painter)
 {
 	for (std::list<Shape*>::iterator iter = mShapes.begin(); iter != mShapes.end(); iter++)
 	{
-		(*iter)->Render(painter, mCamera);
+		Shape* shape = *iter;
+		if (shape && mLayerManager)
+		{
+			auto layer = mLayerManager->GetLayer(shape->GetLayerName());
+			if (layer && !layer->isVisible)
+			{
+				continue; // Skip hidden layer shapes
+			}
+		}
+		shape->Render(painter, mCamera);
 	}
 }

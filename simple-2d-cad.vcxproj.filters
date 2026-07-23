@@ -115,6 +115,12 @@
     <ClCompile Include="state\TransformState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="layer\Layer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="layer\LayerWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="command\Command.h">
@@ -147,6 +153,12 @@
     <ClInclude Include="state\TransformState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="layer\Layer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="layer\LayerWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
     <ClInclude Include="utils\SelectUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>

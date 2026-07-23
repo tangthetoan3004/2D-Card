@@ -63,6 +63,15 @@ void TransformState::mouseReleaseEvent(QMouseEvent* event)
             std::list<Shape*> shapes = mScene->retShapes();
             for (Shape* s : shapes)
             {
+                if (s && mScene->GetLayerManager())
+                {
+                    auto layer = mScene->GetLayerManager()->GetLayer(s->GetLayerName());
+                    if (layer && layer->isLocked)
+                    {
+                        continue; // Skip shapes on locked layers
+                    }
+                }
+
                 if (s->CheckShapeType("Point"))
                 {
                     Vertex* v = dynamic_cast<Vertex*>(s);

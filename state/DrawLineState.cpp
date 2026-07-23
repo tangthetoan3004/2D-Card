@@ -48,9 +48,14 @@ void DrawLineState::mouseReleaseEvent(QMouseEvent* event)
 
 		if (mPoints.size() == 2)
 		{
+			std::string activeLayer = mScene->GetLayerManager() ? mScene->GetLayerManager()->GetActiveLayerName() : "0";
 			Vertex* v1 = new Vertex(mCamera->SetWindowCoordinate(mPoints.front().toPoint()));
 			Vertex* v2 = new Vertex(mCamera->SetWindowCoordinate(mPoints.back().toPoint()));
 			Line* line = new Line(v1, v2);
+			v1->SetLayerName(activeLayer);
+			v2->SetLayerName(activeLayer);
+			line->SetLayerName(activeLayer);
+
 			mViewport->PushCommand(std::make_unique<DrawLineCommand>(mScene, line, std::vector<Vertex*>{ v1, v2 }));
 
 			// Initialization

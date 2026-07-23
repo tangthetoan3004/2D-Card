@@ -114,9 +114,12 @@
     <ClCompile Include="command\RotateCommand.cpp" />
     <ClCompile Include="command\ScaleCommand.cpp" />
     <ClCompile Include="state\TransformState.cpp" />
+    <ClCompile Include="layer\Layer.cpp" />
+    <ClCompile Include="layer\LayerWidget.cpp" />
     <ClCompile Include="viewport\Viewport.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="main.cpp" />
+    <QtMoc Include="layer\LayerWidget.h" />
     <None Include=".editorconfig" />
     <None Include="simple-2d-cad.ico" />
     <ResourceCompile Include="simple-2d-cad.rc" />
@@ -132,6 +135,7 @@
     <ClInclude Include="command\RotateCommand.h" />
     <ClInclude Include="command\ScaleCommand.h" />
     <ClInclude Include="state\TransformState.h" />
+    <ClInclude Include="layer\Layer.h" />
     <ClInclude Include="viewport\Camera.h" />
     <ClInclude Include="viewport\Viewport.h" />
     <ClInclude Include="viewport\Scene.h" />

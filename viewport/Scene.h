@@ -7,6 +7,7 @@
 #include <list>
 #include "Camera.h"
 #include "../shape/Shape.h"
+#include "../layer/Layer.h"
 
 class Scene
 {
@@ -19,6 +20,7 @@ public:
 	void AddShape(Shape* shape);
 	void UpdateShapes(const std::list<Shape*>& newShapes);
 	void CreateSampleShapes();
+	LayerManager* GetLayerManager() { return mLayerManager; }
 
 	// Render method
 	void RenderCoordinate(QPainter* painter);
@@ -27,4 +29,5 @@ public:
 private:
 	std::list<Shape*> mShapes;
 	Camera* mCamera;
+	LayerManager* mLayerManager;
 };

@@ -1,4 +1,5 @@
 #include "MainWindow.h"
+#include "layer/LayerWidget.h"
 
 
 MainWindow::MainWindow(QWidget* parent)
@@ -16,7 +17,9 @@ MainWindow::MainWindow(QWidget* parent)
 	SetMenubar();
 	SetToolbar();
 	setCentralWidget(mViewport);
-	SetSidebarWidget(mViewport);
+
+	LayerWidget* layerWidget = new LayerWidget(mViewport->GetScene()->GetLayerManager(), mViewport, this);
+	SetSidebarWidget(layerWidget);
 	SetUnderbarWidget(mViewport);
 }
 
