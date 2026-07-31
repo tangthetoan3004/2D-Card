@@ -40,25 +40,14 @@ QPolygonF Face::GetFace(Camera* cam)
 void Face::UpdateFace(Camera* cam, const QPointF& pStart, const QPointF& pEnd, std::list<Shape*> shapes, std::vector<Vertex>& vertices)
 {
 	QPointF offset = pEnd - pStart;
-
-	// Find current Face* and get vertices as Face size using reverse iterator
-	// And update vertex with offset
-	for (std::list<Shape*>::iterator iter = shapes.begin(); iter != shapes.end(); iter++)
+	size_t i = 0;
+	for (Vertex* v : mVertices)
 	{
-		if ((*iter) == this)
+		if (v && i < vertices.size())
 		{
-			int count = 0;
-			int fSize = vertices.size();
-
-			while (count < fSize)
-			{
-				count++;
-				iter--; // Continuous vertices just before Face* are Face Vertices
-				QPointF p = offset + cam->SetScreenCoordinate(vertices[fSize - count].GetVertex());
-				dynamic_cast<Vertex*>(*iter)->UpdateVertex(cam->SetWindowCoordinate(p.toPoint()));
-			}
-
-			break;
+			QPointF p = offset + cam->SetScreenCoordinate(vertices[i].GetVertex());
+			v->UpdateVertex(cam->SetWindowCoordinate(p.toPoint()));
+			i++;
 		}
 	}
 }

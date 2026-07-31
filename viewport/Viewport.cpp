@@ -52,38 +52,44 @@ void Viewport::UpdateState(const std::string& name)
 {
 	if (!name.compare("DRAW_LINE"))
 	{
+		State* old = mMachine->GetState(name);
 		mMachine->DeleteState(name);
-		delete dynamic_cast<DrawLineState*>(mMachine->GetState(name));
+		delete old;
 		mMachine->AddState(new DrawLineState("DRAW_LINE", mData));
 	}
 	else if (!name.compare("DRAW_FACE"))
 	{
+		State* old = mMachine->GetState(name);
 		mMachine->DeleteState(name);
-		delete dynamic_cast<DrawFaceState*>(mMachine->GetState(name));
+		delete old;
 		mMachine->AddState(new DrawFaceState("DRAW_FACE", mData));
 	}
 	else if (!name.compare("TRANSFORM_MOVE"))
 	{
+		State* old = mMachine->GetState(name);
 		mMachine->DeleteState(name);
-		delete dynamic_cast<TransformState*>(mMachine->GetState(name));
+		delete old;
 		mMachine->AddState(new TransformState("TRANSFORM_MOVE", mData, TransformMode::MOVE));
 	}
 	else if (!name.compare("TRANSFORM_COPY"))
 	{
+		State* old = mMachine->GetState(name);
 		mMachine->DeleteState(name);
-		delete dynamic_cast<TransformState*>(mMachine->GetState(name));
+		delete old;
 		mMachine->AddState(new TransformState("TRANSFORM_COPY", mData, TransformMode::COPY));
 	}
 	else if (!name.compare("TRANSFORM_ROTATE"))
 	{
+		State* old = mMachine->GetState(name);
 		mMachine->DeleteState(name);
-		delete dynamic_cast<TransformState*>(mMachine->GetState(name));
+		delete old;
 		mMachine->AddState(new TransformState("TRANSFORM_ROTATE", mData, TransformMode::ROTATE));
 	}
 	else if (!name.compare("TRANSFORM_SCALE"))
 	{
+		State* old = mMachine->GetState(name);
 		mMachine->DeleteState(name);
-		delete dynamic_cast<TransformState*>(mMachine->GetState(name));
+		delete old;
 		mMachine->AddState(new TransformState("TRANSFORM_SCALE", mData, TransformMode::SCALE));
 	}
 

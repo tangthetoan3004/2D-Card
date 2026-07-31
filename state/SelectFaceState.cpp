@@ -11,6 +11,7 @@ SelectFaceState::SelectFaceState(const std::string& name, SelectUtils::ViewportD
 
 	// TODO: Don't create Vertex pointer with face creation
 	mFace = new Face(new Vertex(QPointF(INFINITY, INFINITY)));
+	mHit = false;
 }
 
 void SelectFaceState::UpdateScene(Scene* scene)
@@ -22,7 +23,14 @@ void SelectFaceState::mousePressEvent(QMouseEvent* event)
 {
 	mPos = event->pos();
 	mPosStart = event->pos();
-	mFaceVertices = mFace->GetVertices();
+	if (mHit && mFace)
+	{
+		mFaceVertices = mFace->GetVertices();
+	}
+	else
+	{
+		mFaceVertices.clear();
+	}
 	mButton = event->button();
 }
 

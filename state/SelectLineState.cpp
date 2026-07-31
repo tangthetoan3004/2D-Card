@@ -9,6 +9,7 @@ SelectLineState::SelectLineState(const std::string& name, SelectUtils::ViewportD
 	mScene = data->scene;
 	mCamera = data->camera;
 	mLine = new Line;
+	mHit = false;
 }
 
 void SelectLineState::UpdateScene(Scene* scene)
@@ -20,7 +21,14 @@ void SelectLineState::mousePressEvent(QMouseEvent* event)
 {
 	mPos = event->pos();
 	mPosStart = event->pos();
-	mLineVertices = mLine->GetVertices();
+	if (mHit && mLine)
+	{
+		mLineVertices = mLine->GetVertices();
+	}
+	else
+	{
+		mLineVertices.clear();
+	}
 	mButton = event->button();
 }
 

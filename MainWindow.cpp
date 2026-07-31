@@ -1,5 +1,6 @@
 #include "MainWindow.h"
 #include "layer/LayerWidget.h"
+#include <QDockWidget>
 
 
 MainWindow::MainWindow(QWidget* parent)
@@ -8,8 +9,6 @@ MainWindow::MainWindow(QWidget* parent)
 {
 	// Create main Viewport
 	mViewport = new Viewport(this);
-	mSidebar = new QWidget(mViewport);
-	mUnderbar = new QWidget(mViewport);
 
 	// Set UI
 	ui->setupUi(this);
@@ -18,9 +17,13 @@ MainWindow::MainWindow(QWidget* parent)
 	SetToolbar();
 	setCentralWidget(mViewport);
 
-	LayerWidget* layerWidget = new LayerWidget(mViewport->GetScene()->GetLayerManager(), mViewport, this);
-	SetSidebarWidget(layerWidget);
+	SetSidebarWidget(mViewport);
 	SetUnderbarWidget(mViewport);
+
+	LayerWidget* layerWidget = new LayerWidget(mViewport->GetScene()->GetLayerManager(), mViewport, this);
+	QDockWidget* layerDock = new QDockWidget("Layer Manager", this);
+	layerDock->setWidget(layerWidget);
+	addDockWidget(Qt::RightDockWidgetArea, layerDock);
 }
 
 MainWindow::~MainWindow()

@@ -12,43 +12,43 @@ class Viewport;
 class State
 {
 public:
-	State(const std::string& name, SelectUtils::ViewportData* data);
+	State(const std::string &name, SelectUtils::ViewportData *data);
 	std::string GetName();
-	bool GetMouseLeftPressed(bool hit, int button, QMouseEvent* event);
+	bool GetMouseLeftPressed(bool hit, int button, QMouseEvent *event);
 
-	virtual void UpdateScene(Scene* scene) = 0;
-	virtual void mousePressEvent(QMouseEvent* event) = 0;
-	virtual void mouseMoveEvent(QMouseEvent* event) = 0;
-	virtual void mouseReleaseEvent(QMouseEvent* event) = 0;
-	virtual void paintEvent(QPainter* painter) = 0;
-	virtual Shape* GetSelectedShape() { return nullptr; }
+	virtual void UpdateScene(Scene *scene) = 0;
+	virtual void mousePressEvent(QMouseEvent *event) = 0;
+	virtual void mouseMoveEvent(QMouseEvent *event) = 0;
+	virtual void mouseReleaseEvent(QMouseEvent *event) = 0;
+	virtual void paintEvent(QPainter *painter) = 0;
+	virtual Shape *GetSelectedShape() { return nullptr; }
 
 private:
 	std::string mName;
-	QWidget* mViewport;
-	Scene* mScene;
-	Camera* mCamera;
+	QWidget *mViewport;
+	Scene *mScene;
+	Camera *mCamera;
 };
 
 class DrawLineState : public State
 {
 public:
-	DrawLineState(const std::string& name, SelectUtils::ViewportData* data);
+	DrawLineState(const std::string &name, SelectUtils::ViewportData *data);
 
-	virtual void UpdateScene(Scene* scene) override;
-	virtual void mousePressEvent(QMouseEvent* event) override;
-	virtual void mouseMoveEvent(QMouseEvent* event) override;
-	virtual void mouseReleaseEvent(QMouseEvent* event) override;
-	virtual void paintEvent(QPainter* painter) override;
+	virtual void UpdateScene(Scene *scene) override;
+	virtual void mousePressEvent(QMouseEvent *event) override;
+	virtual void mouseMoveEvent(QMouseEvent *event) override;
+	virtual void mouseReleaseEvent(QMouseEvent *event) override;
+	virtual void paintEvent(QPainter *painter) override;
 
 private:
 	std::string mName;
-	Viewport* mViewport;
-	Scene* mScene;
-	Camera* mCamera;
+	Viewport *mViewport;
+	Scene *mScene;
+	Camera *mCamera;
 
 	QPointF mPos;
-	std::vector<QPointF> mPoints; // Temporary points for line construction
+	std::vector<QPointF> mPoints;
 	int mButton;
 	bool mDrawLine;
 };
@@ -56,19 +56,19 @@ private:
 class DrawFaceState : public State
 {
 public:
-	DrawFaceState(const std::string& name, SelectUtils::ViewportData* data);
+	DrawFaceState(const std::string &name, SelectUtils::ViewportData *data);
 
-	virtual void UpdateScene(Scene* scene) override;
-	virtual void mousePressEvent(QMouseEvent* event) override;
-	virtual void mouseMoveEvent(QMouseEvent* event) override;
-	virtual void mouseReleaseEvent(QMouseEvent* event) override;
-	virtual void paintEvent(QPainter* painter) override;
+	virtual void UpdateScene(Scene *scene) override;
+	virtual void mousePressEvent(QMouseEvent *event) override;
+	virtual void mouseMoveEvent(QMouseEvent *event) override;
+	virtual void mouseReleaseEvent(QMouseEvent *event) override;
+	virtual void paintEvent(QPainter *painter) override;
 
 private:
 	std::string mName;
-	Viewport* mViewport;
-	Scene* mScene;
-	Camera* mCamera;
+	Viewport *mViewport;
+	Scene *mScene;
+	Camera *mCamera;
 
 	QPointF mPos;
 	int mButton;
@@ -76,7 +76,7 @@ private:
 	QPolygonF mPolygon;
 	QPolygonF mGuidePolygon;
 	QLineF mLine;
-	Vertex* mVertex;
+	Vertex *mVertex;
 	std::vector<QPointF> mPoints; // Temporary points for polygon construction
 	bool mDrawPolygon;
 	bool mHit;
@@ -85,27 +85,27 @@ private:
 class SelectPointState : public State
 {
 public:
-	SelectPointState(const std::string& name, SelectUtils::ViewportData* data);
+	SelectPointState(const std::string &name, SelectUtils::ViewportData *data);
 
-	virtual void UpdateScene(Scene* scene) override;
-	virtual void mousePressEvent(QMouseEvent* event) override;
-	virtual void mouseMoveEvent(QMouseEvent* event) override;
-	virtual void mouseReleaseEvent(QMouseEvent* event) override;
-	virtual void paintEvent(QPainter* painter) override;
-	virtual Shape* GetSelectedShape() override { return mHit ? dynamic_cast<Shape*>(mVertex) : nullptr; }
+	virtual void UpdateScene(Scene *scene) override;
+	virtual void mousePressEvent(QMouseEvent *event) override;
+	virtual void mouseMoveEvent(QMouseEvent *event) override;
+	virtual void mouseReleaseEvent(QMouseEvent *event) override;
+	virtual void paintEvent(QPainter *painter) override;
+	virtual Shape *GetSelectedShape() override { return mHit ? dynamic_cast<Shape *>(mVertex) : nullptr; }
 
 private:
 	std::string mName;
-	Viewport* mViewport;
-	Scene* mScene;
-	Camera* mCamera;
+	Viewport *mViewport;
+	Scene *mScene;
+	Camera *mCamera;
 
 	QPointF mPos;
 	int mButton;
 
 	// For select point
-	std::list<Shape*> mShapes;
-	Vertex* mVertex;
+	std::list<Shape *> mShapes;
+	Vertex *mVertex;
 	QPolygonF mPolygon;
 	bool mHit;
 
@@ -119,20 +119,20 @@ private:
 class SelectLineState : public State
 {
 public:
-	SelectLineState(const std::string& name, SelectUtils::ViewportData* data);
+	SelectLineState(const std::string &name, SelectUtils::ViewportData *data);
 
-	virtual void UpdateScene(Scene* scene) override;
-	virtual void mousePressEvent(QMouseEvent* event) override;
-	virtual void mouseMoveEvent(QMouseEvent* event) override;
-	virtual void mouseReleaseEvent(QMouseEvent* event) override;
-	virtual void paintEvent(QPainter* painter) override;
-	virtual Shape* GetSelectedShape() override { return mHit ? dynamic_cast<Shape*>(mLine) : nullptr; }
+	virtual void UpdateScene(Scene *scene) override;
+	virtual void mousePressEvent(QMouseEvent *event) override;
+	virtual void mouseMoveEvent(QMouseEvent *event) override;
+	virtual void mouseReleaseEvent(QMouseEvent *event) override;
+	virtual void paintEvent(QPainter *painter) override;
+	virtual Shape *GetSelectedShape() override { return mHit ? dynamic_cast<Shape *>(mLine) : nullptr; }
 
 private:
 	std::string mName;
-	Viewport* mViewport;
-	Scene* mScene;
-	Camera* mCamera;
+	Viewport *mViewport;
+	Scene *mScene;
+	Camera *mCamera;
 
 	QPointF mPos;
 	QPointF mPosStart;
@@ -140,8 +140,8 @@ private:
 	int mButton;
 
 	// For select line
-	std::list<Shape*> mShapes;
-	Line* mLine;
+	std::list<Shape *> mShapes;
+	Line *mLine;
 	QPolygonF mPolygon;
 	bool mHit;
 };
@@ -149,20 +149,20 @@ private:
 class SelectFaceState : public State
 {
 public:
-	SelectFaceState(const std::string& name, SelectUtils::ViewportData* data);
+	SelectFaceState(const std::string &name, SelectUtils::ViewportData *data);
 
-	virtual void UpdateScene(Scene* scene) override;
-	virtual void mousePressEvent(QMouseEvent* event) override;
-	virtual void mouseMoveEvent(QMouseEvent* event) override;
-	virtual void mouseReleaseEvent(QMouseEvent* event) override;
-	virtual void paintEvent(QPainter* painter) override;
-	virtual Shape* GetSelectedShape() override { return mHit ? dynamic_cast<Shape*>(mFace) : nullptr; }
+	virtual void UpdateScene(Scene *scene) override;
+	virtual void mousePressEvent(QMouseEvent *event) override;
+	virtual void mouseMoveEvent(QMouseEvent *event) override;
+	virtual void mouseReleaseEvent(QMouseEvent *event) override;
+	virtual void paintEvent(QPainter *painter) override;
+	virtual Shape *GetSelectedShape() override { return mHit ? dynamic_cast<Shape *>(mFace) : nullptr; }
 
 private:
 	std::string mName;
-	Viewport* mViewport;
-	Scene* mScene;
-	Camera* mCamera;
+	Viewport *mViewport;
+	Scene *mScene;
+	Camera *mCamera;
 
 	QPointF mPos;
 	QPointF mPosStart;
@@ -170,8 +170,8 @@ private:
 	int mButton;
 
 	// For select line
-	std::list<Shape*> mShapes;
-	Face* mFace;
+	std::list<Shape *> mShapes;
+	Face *mFace;
 	QPolygonF mPolygon;
 	bool mHit;
 };

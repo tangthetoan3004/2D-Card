@@ -11,7 +11,7 @@ Scene::Scene(Camera* camera)
 Scene::~Scene()
 {
 	delete mLayerManager;
-	for (std::list<Shape*>::iterator iter; iter != mShapes.end(); iter++)
+	for (auto iter = mShapes.begin(); iter != mShapes.end(); iter++)
 	{
 		delete (*iter);
 	}

@@ -17,8 +17,8 @@ Line::Line(std::list<Vertex*> vertices)
 std::vector<Vertex> Line::GetVertices()
 {
 	std::vector<Vertex> vertices;
-	vertices.push_back(mV1->GetVertex());
-	vertices.push_back(mV2->GetVertex());
+	if (mV1) vertices.push_back(mV1->GetVertex());
+	if (mV2) vertices.push_back(mV2->GetVertex());
 
 	return vertices;
 }
@@ -32,6 +32,7 @@ QLineF Line::GetLine(Camera* cam)
 
 		return QLineF(p1, p2);
 	}
+	return QLineF();
 }
 
 void Line::UpdateLine(Camera* cam, const QPointF& pStart, const QPointF& pEnd, std::vector<Vertex>& vertices)

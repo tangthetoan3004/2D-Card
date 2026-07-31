@@ -9,6 +9,7 @@ SelectPointState::SelectPointState(const std::string& name, SelectUtils::Viewpor
 	mScene = data->scene;
 	mCamera = data->camera;
 	mVertex = new Vertex(QPointF(INFINITY, INFINITY));
+	mHit = false;
 	mSnap = false;
 }
 
