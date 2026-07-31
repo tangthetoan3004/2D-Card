@@ -462,3 +462,6 @@ FodyWeavers.xsd
 
 # Project documentation
 docs/
+
+# Agent folder
+.agent/
